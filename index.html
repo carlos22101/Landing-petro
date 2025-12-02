@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Análisis de Fluidos de Perforación</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 50%, #000000 100%);
+            color: #333;
+            min-height: 100vh;
+            padding-bottom: 2rem;
+        }
+        header {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: white;
+            padding: 2rem 1rem;
+            text-align: center;
+            box-shadow: 0 4px 20px rgba(255, 199, 0, 0.3);
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #FFC700;
+        }
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            background: linear-gradient(135deg, #FFC700 0%, #F59C00 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            color: #FFC700;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 1.5rem;
+        }
+        .main-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s ease;
+            border-top: 5px solid #FFC700;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 50px rgba(255, 199, 0, 0.4);
+        }
+        .card.profundidad { border-top-color: #FFC700; }
+        .card.temperatura { border-top-color: #F59C00; }
+        .card.fluido { border-top-color: #FFC700; }
+        .card.densidad { border-top-color: #F59C00; }
+        .card.viscosidad { border-top-color: #FFC700; }
+        .card.estado { border-top-color: #F59C00; }
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #FFC700;
+        }
+        .card-icon {
+            font-size: 2.5rem;
+            margin-right: 1rem;
+        }
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #000000;
+        }
+        .sample-id {
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #000000;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+        .card.profundidad .sample-id { background: #FFC700; }
+        .card.temperatura .sample-id { background: #F59C00; }
+        .card.fluido .sample-id { background: #FFC700; }
+        .card.densidad .sample-id { background: #F59C00; }
+        .card.viscosidad .sample-id { background: #FFC700; }
+        .card.estado .sample-id { background: #F59C00; }
+        .data-display {
+            color: #000000;
+            padding: 1.5rem;
+            border-radius: 15px;
+            text-align: center;
+            margin: 1rem 0;
+        }
+        .data-display.profundidad { background: #FFC700; }
+        .data-display.temperatura { background: #F59C00; }
+        .data-display.fluido { background: #FFC700; }
+        .data-display.densidad { background: #F59C00; }
+        .data-display.viscosidad { background: #FFC700; }
+        .data-display.estado { background: #F59C00; }
+        .data-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        .data-value.text {
+            font-size: 1.8rem;
+            line-height: 1.2;
+        }
+        .data-unit {
+            font-size: 1rem;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+        .info-section {
+            margin-top: 1rem;
+        }
+        .info-item {
+            background: #f8f9fa;
+            padding: 0.8rem;
+            margin-bottom: 0.6rem;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+        .info-item:hover {
+            background: #fff8e1;
+            border-left-color: #FFC700;
+        }
+        .info-label {
+            font-weight: 600;
+            color: #000000;
+            font-size: 0.9rem;
+        }
+        .info-value {
+            color: #F59C00;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+        .table-container {
+            background: white;
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+            margin-top: 2rem;
+            overflow-x: auto;
+            border-top: 5px solid #FFC700;
+        }
+        .table-title {
+            font-size: 1.8rem;
+            color: #000000;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            overflow: hidden;
+            border-radius: 10px;
+            min-width: 800px;
+        }
+        thead {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #FFC700;
+        }
+        th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            letter-spacing: 1px;
+        }
+        td {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        tbody tr {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+        tbody tr:hover {
+            background: #fff8e1;
+            transform: scale(1.01);
+        }
+        tbody tr:nth-child(even) {
+            background: #fafbfc;
+        }
+        tbody tr:nth-child(even):hover {
+            background: #fff8e1;
+        }
+        tbody tr.selected {
+            background: linear-gradient(135deg, #FFC700 0%, #F59C00 100%);
+            font-weight: 600;
+            color: #000000;
+        }
+        .status-badge {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+        .status-normal {
+            background: #d4f4dd;
+            color: #155724;
+            border: 1px solid #28a745;
+        }
+        .status-alto {
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #F59C00;
+        }
+        .status-critico {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #dc3545;
+        }
+        .status-optimo {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #17a2b8;
+        }
+        footer {
+            background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+            color: #FFC700;
+            text-align: center;
+            padding: 1.5rem 0;
+            margin-top: 3rem;
+            border-top: 3px solid #FFC700;
+        }
+        .instruction {
+            background: rgba(255, 199, 0, 0.15);
+            color: #FFC700;
+            padding: 1rem;
+            border-radius: 10px;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-size: 0.95rem;
+            border: 2px solid rgba(255, 199, 0, 0.3);
+            font-weight: 600;
+        }
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .card.updating {
+            animation: slideUp 0.5s ease;
+        }
+        @media (max-width: 1024px) {
+            .main-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.2rem;
+            }
+        }
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+                letter-spacing: 1px;
+            }
+            header p {
+                font-size: 0.95rem;
+            }
+            .main-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+            .data-value {
+                font-size: 2.5rem;
+            }
+            .data-value.text {
+                font-size: 1.5rem;
+            }
+            .card-icon {
+                font-size: 2rem;
+            }
+            .card-title {
+                font-size: 1.3rem;
+            }
+            .table-container {
+                padding: 1rem;
+            }
+            .table-title {
+                font-size: 1.4rem;
+            }
+            table {
+                font-size: 0.85rem;
+            }
+            th, td {
+                padding: 0.7rem 0.5rem;
+            }
+            .container {
+                padding: 0 1rem;
+            }
+        }
+        @media (max-width: 480px) {
+            header h1 {
+                font-size: 1.5rem;
+            }
+            .data-value {
+                font-size: 2rem;
+            }
+            .data-value.text {
+                font-size: 1.3rem;
+            }
+            .card {
+                padding: 1.2rem;
+            }
+            .status-badge {
+                font-size: 0.7rem;
+                padding: 0.3rem 0.6rem;
+            }
+            table {
+                font-size: 0.75rem;
+            }
+            th, td {
+                padding: 0.6rem 0.4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>🛢️ Análisis de Fluidos de Perforación</h1>
+        <p>Emulsión Inversa - Datos de Profundidad del pozo Ku-407R</p>
+    </header>
+    <div class="container">
+        <div class="instruction">
+            👆 Haz clic en cualquier fila de la tabla para mostrar sus datos en las tarjetas principales
+        </div>
+        <div class="main-grid">
+            <div class="card profundidad" id="card-profundidad">
+                <div class="sample-id" id="sample-id-1">Punto: #2</div>
+                <div class="card-header">
+                    <div class="card-icon">📏</div>
+                    <div class="card-title">Profundidad</div>
+                </div>
+                <div class="data-display profundidad">
+                    <div class="data-value" id="profundidad-value">383</div>
+                    <div class="data-unit">metros</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-item">
+                        <span class="info-label">En pies:</span>
+                        <span class="info-value" id="profundidad-pies">1,256.56 ft</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Clasificación:</span>
+                        <span class="info-value" id="clasificacion-prof">Profundidad Baja</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card temperatura" id="card-temperatura">
+                <div class="sample-id" id="sample-id-2">Punto: #2</div>
+                <div class="card-header">
+                    <div class="card-icon">🌡️</div>
+                    <div class="card-title">Temperatura</div>
+                </div>
+                <div class="data-display temperatura">
+                    <div class="data-value" id="temperatura-value">29.6 - 31.5</div>
+                    <div class="data-unit">°C</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-item">
+                        <span class="info-label">Promedio:</span>
+                        <span class="info-value" id="temperatura-prom">30.6 °C</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">En Fahrenheit:</span>
+                        <span class="info-value" id="temperatura-f">87.0 °F</span>
+                    </div>
+                </div>
+            </div>
+            <div class="card fluido" id="card-fluido">
+                <div class="sample-id" id="sample-id-3">Punto: #2</div>
+                <div class="card-header">
+                    <div class="card-icon">💧</div>
+                    <div class="card-title">Tipo de Fluido</div>
+                </div>
+                <div class="data-display fluido">
+                    <div class="data-value text" id="fluido-value">Bentónico</div>
+                    <div class="data-unit">Fluido de perforación</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-item">
+                        <span class="info-label">Densidad:</span>
+                        <span class="info-value" id="densidad-value">1.04 g/cm³</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Viscosidad:</span>
+                        <span class="info-value" id="viscosidad-value">20-40 cP</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="table-container">
+            <h2 class="table-title">📊 Registro de Puntos de Medición</h2>
+            <table id="samples-table">
+                <thead>
+                    <tr>
+                        <th>#</th>
+                        <th>Profundidad (m)</th>
+                        <th>Temperatura (°C)</th>
+                        <th>Fluido</th>
+                        <th>Densidad (g/cm³)</th>
+                        <th>Viscosidad (cP)</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body"></tbody>
+            </table>
+        </div>
+    </div>
+    <footer>
+        <p>© 2025 Ingeniería Petrolera | Sistema de Análisis de Fluidos de Perforación</p>
+    </footer>
+    <script>
+        let samples = [
+            { id: 1, profundidad: 125, temperaturaMin: 23.1, temperaturaMax: 23.8, fluido: 'N/A', densidad: null, viscosidadMin: null, viscosidadMax: null },
+            { id: 2, profundidad: 383, temperaturaMin: 29.6, temperaturaMax: 31.5, fluido: 'Bentónico', densidad: 1.04, viscosidadMin: 20, viscosidadMax: 40 },
+            { id: 3, profundidad: 1499, temperaturaMin: 57.5, temperaturaMax: 65.0, fluido: 'CLSE', densidad: 1.28, viscosidadMin: 30, viscosidadMax: 70 },
+            { id: 4, profundidad: 2835, temperaturaMin: 90.9, temperaturaMax: 105.1, fluido: 'CLSE (pesado)', densidad: 1.55, viscosidadMin: 40, viscosidadMax: 120 },
+            { id: 5, profundidad: 2843, temperaturaMin: 91.1, temperaturaMax: 105.3, fluido: 'E.I.', densidad: 1.65, viscosidadMin: 60, viscosidadMax: 150 },
+            { id: 6, profundidad: 3364, temperaturaMin: 104.1, temperaturaMax: 120.9, fluido: 'BAM', densidad: 1.03, viscosidadMin: 15, viscosidadMax: 35 }
+        ];
+        let currentSampleIndex = 1;
+        function renderTable() {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
+            samples.forEach((sample, index) => {
+                const row = document.createElement('tr');
+                if (index === currentSampleIndex) {
+                    row.classList.add('selected');
+                }
+                const tempRange = sample.temperaturaMin !== null ? 
+                    `${sample.temperaturaMin.toFixed(1)} – ${sample.temperaturaMax.toFixed(1)}` : 'N/A';
+                const viscRange = sample.viscosidadMin !== null ? 
+                    `${sample.viscosidadMin}–${sample.viscosidadMax}` : '—';
+                const densStr = sample.densidad !== null ? sample.densidad.toFixed(2) : '—';
+                row.innerHTML = `
+                    <td><strong>${sample.id}</strong></td>
+                    <td>${sample.profundidad.toLocaleString()}</td>
+                    <td>${tempRange}</td>
+                    <td>${sample.fluido}</td>
+                    <td>${densStr}</td>
+                    <td>${viscRange}</td>
+                `;
+                row.addEventListener('click', () => selectSample(index));
+                tbody.appendChild(row);
+            });
+        }
+        function selectSample(index) {
+            if (index === currentSampleIndex) return;
+            currentSampleIndex = index;
+            updateCards(samples[index]);
+            renderTable();
+            if (window.innerWidth <= 768) {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+        }
+        function updateCards(sample) {
+            document.querySelectorAll('.card').forEach(card => {
+                card.classList.add('updating');
+                setTimeout(() => card.classList.remove('updating'), 500);
+            });
+            for (let i = 1; i <= 3; i++) {
+                document.getElementById(`sample-id-${i}`).textContent = `Muestra: #${sample.id}`;
+            }
+            document.getElementById('profundidad-value').textContent = sample.profundidad.toLocaleString();
+            const profundidadPies = (sample.profundidad * 3.28084).toFixed(2);
+            document.getElementById('profundidad-pies').textContent = profundidadPies.toLocaleString() + ' ft';
+            let clasifProf = 'Profundidad Muy Baja';
+            if (sample.profundidad >= 3000) clasifProf = 'Profundidad Muy Alta';
+            else if (sample.profundidad >= 2000) clasifProf = 'Profundidad Alta';
+            else if (sample.profundidad >= 1000) clasifProf = 'Profundidad Media';
+            else if (sample.profundidad >= 500) clasifProf = 'Profundidad Baja';
+            document.getElementById('clasificacion-prof').textContent = clasifProf;
+            if (sample.temperaturaMin !== null) {
+                document.getElementById('temperatura-value').textContent = 
+                    `${sample.temperaturaMin.toFixed(1)} - ${sample.temperaturaMax.toFixed(1)}`;
+                const tempProm = (sample.temperaturaMin + sample.temperaturaMax) / 2;
+                document.getElementById('temperatura-prom').textContent = tempProm.toFixed(1) + ' °C';
+                const tempF = (tempProm * 9/5 + 32).toFixed(1);
+                document.getElementById('temperatura-f').textContent = tempF + ' °F';
+            } else {
+                document.getElementById('temperatura-value').textContent = 'N/A';
+                document.getElementById('temperatura-prom').textContent = 'N/A';
+                document.getElementById('temperatura-f').textContent = 'N/A';
+            }
+            document.getElementById('fluido-value').textContent = sample.fluido;
+            if (sample.densidad !== null) {
+                document.getElementById('densidad-value').textContent = sample.densidad.toFixed(2) + ' g/cm³';
+            } else {
+                document.getElementById('densidad-value').textContent = '—';
+            }
+            if (sample.viscosidadMin !== null) {
+                document.getElementById('viscosidad-value').textContent = `${sample.viscosidadMin}-${sample.viscosidadMax} cP`;
+            } else {
+                document.getElementById('viscosidad-value').textContent = '—';
+            }
+        }
+        renderTable();
+        updateCards(samples[currentSampleIndex]);
+    </script>
+</body>
+</html>
