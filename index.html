@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="icon" type="image/jpeg" href="petro.jpg">
     <title>Análisis de Fluidos de Perforación</title>
     <style>
         * {
@@ -65,7 +64,7 @@
             transform: translateY(-5px);
             box-shadow: 0 20px 50px rgba(255, 199, 0, 0.4);
         }
-        .card.profundidad { border-top-color: #FFC700; }
+        .card.densidad { border-top-color: #FFC700; }
         .card.temperatura { border-top-color: #F59C00; }
         .card.fluido { border-top-color: #FFC700; }
         .card.densidad { border-top-color: #F59C00; }
@@ -96,7 +95,7 @@
             margin-bottom: 1rem;
             text-align: center;
         }
-        .card.profundidad .sample-id { background: #FFC700; }
+        .card.densidad .sample-id { background: #FFC700; }
         .card.temperatura .sample-id { background: #F59C00; }
         .card.fluido .sample-id { background: #FFC700; }
         .card.densidad .sample-id { background: #F59C00; }
@@ -109,7 +108,7 @@
             text-align: center;
             margin: 1rem 0;
         }
-        .data-display.profundidad { background: #FFC700; }
+        .data-display.densidad { background: #FFC700; }
         .data-display.temperatura { background: #F59C00; }
         .data-display.fluido { background: #FFC700; }
         .data-display.densidad { background: #F59C00; }
@@ -351,31 +350,31 @@
 <body>
     <header>
         <h1>🛢️ Análisis de Fluidos de Perforación</h1>
-        <p>Emulsión Inversa - Datos de Profundidad del pozo Ku-407R</p>
+        <p>Emulsión Inversa - Datos de Profundidad del pozo Ku-4O7R</p>
     </header>
     <div class="container">
         <div class="instruction">
             👆 Haz clic en cualquier fila de la tabla para mostrar sus datos en las tarjetas principales
         </div>
         <div class="main-grid">
-            <div class="card profundidad" id="card-profundidad">
-                <div class="sample-id" id="sample-id-1">Punto: #2</div>
+            <div class="card densidad" id="card-densidad">
+                <div class="sample-id" id="sample-id-1">Muestra: #2</div>
                 <div class="card-header">
-                    <div class="card-icon">📏</div>
-                    <div class="card-title">Profundidad</div>
+                    <div class="card-icon">⚖️</div>
+                    <div class="card-title">Densidad</div>
                 </div>
-                <div class="data-display profundidad">
-                    <div class="data-value" id="profundidad-value">383</div>
-                    <div class="data-unit">metros</div>
+                <div class="data-display densidad">
+                    <div class="data-value" id="densidad-value">1.04</div>
+                    <div class="data-unit">g/cm³</div>
                 </div>
                 <div class="info-section">
                     <div class="info-item">
-                        <span class="info-label">En pies:</span>
-                        <span class="info-value" id="profundidad-pies">1,256.56 ft</span>
+                        <span class="info-label">Profundidad:</span>
+                        <span class="info-value" id="profundidad-value">963 m</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Clasificación:</span>
-                        <span class="info-value" id="clasificacion-prof">Profundidad Baja</span>
+                        <span class="info-value" id="clasificacion-dens">Densidad Baja</span>
                     </div>
                 </div>
             </div>
@@ -413,7 +412,7 @@
                 <div class="info-section">
                     <div class="info-item">
                         <span class="info-label">Densidad:</span>
-                        <span class="info-value" id="densidad-value">1.04 g/cm³</span>
+                        <span class="info-value" id="densidad-info">1.04 g/cm³</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Viscosidad:</span>
@@ -427,7 +426,7 @@
             <table id="samples-table">
                 <thead>
                     <tr>
-                        <th>#</th>
+                        <th>Número de Etapa</th>
                         <th>Profundidad (m)</th>
                         <th>Temperatura (°C)</th>
                         <th>Fluido</th>
@@ -444,12 +443,9 @@
     </footer>
     <script>
         let samples = [
-            { id: 1, profundidad: 125, temperaturaMin: 23.1, temperaturaMax: 23.8, fluido: 'N/A', densidad: null, viscosidadMin: null, viscosidadMax: null },
-            { id: 2, profundidad: 383, temperaturaMin: 29.6, temperaturaMax: 31.5, fluido: 'Bentónico', densidad: 1.04, viscosidadMin: 20, viscosidadMax: 40 },
-            { id: 3, profundidad: 1499, temperaturaMin: 57.5, temperaturaMax: 65.0, fluido: 'CLSE', densidad: 1.28, viscosidadMin: 30, viscosidadMax: 70 },
-            { id: 4, profundidad: 2835, temperaturaMin: 90.9, temperaturaMax: 105.1, fluido: 'CLSE (pesado)', densidad: 1.55, viscosidadMin: 40, viscosidadMax: 120 },
-            { id: 5, profundidad: 2843, temperaturaMin: 91.1, temperaturaMax: 105.3, fluido: 'E.I.', densidad: 1.65, viscosidadMin: 60, viscosidadMax: 150 },
-            { id: 6, profundidad: 3364, temperaturaMin: 104.1, temperaturaMax: 120.9, fluido: 'BAM', densidad: 1.03, viscosidadMin: 15, viscosidadMax: 35 }
+            { id: 1, profundidad: 425, temperaturaMin: 23.1, temperaturaMax: 23.8, fluido: 'N/A', densidad: null, viscosidadMin: null, viscosidadMax: null },
+            { id: 2, profundidad: 963, temperaturaMin: 29.6, temperaturaMax: 31.5, fluido: 'Bentónico', densidad: 1.04, viscosidadMin: 20, viscosidadMax: 40 },
+            { id: 3, profundidad: 2364, temperaturaMin: 57.5, temperaturaMax: 65.0, fluido: 'CLSE', densidad: 1.28, viscosidadMin: 30, viscosidadMax: 70 },
         ];
         let currentSampleIndex = 1;
         function renderTable() {
@@ -492,17 +488,21 @@
                 setTimeout(() => card.classList.remove('updating'), 500);
             });
             for (let i = 1; i <= 3; i++) {
-                document.getElementById(`sample-id-${i}`).textContent = `Muestra: #${sample.id}`;
+                document.getElementById(`sample-id-${i}`).textContent = `Punto: #${sample.id}`;
             }
-            document.getElementById('profundidad-value').textContent = sample.profundidad.toLocaleString();
-            const profundidadPies = (sample.profundidad * 3.28084).toFixed(2);
-            document.getElementById('profundidad-pies').textContent = profundidadPies.toLocaleString() + ' ft';
-            let clasifProf = 'Profundidad Muy Baja';
-            if (sample.profundidad >= 3000) clasifProf = 'Profundidad Muy Alta';
-            else if (sample.profundidad >= 2000) clasifProf = 'Profundidad Alta';
-            else if (sample.profundidad >= 1000) clasifProf = 'Profundidad Media';
-            else if (sample.profundidad >= 500) clasifProf = 'Profundidad Baja';
-            document.getElementById('clasificacion-prof').textContent = clasifProf;
+            if (sample.densidad !== null) {
+                document.getElementById('densidad-value').textContent = sample.densidad.toFixed(2);
+                let clasifDens = 'Densidad Muy Baja';
+                if (sample.densidad >= 1.5) clasifDens = 'Densidad Muy Alta';
+                else if (sample.densidad >= 1.3) clasifDens = 'Densidad Alta';
+                else if (sample.densidad >= 1.15) clasifDens = 'Densidad Media';
+                else if (sample.densidad >= 1.05) clasifDens = 'Densidad Baja';
+                document.getElementById('clasificacion-dens').textContent = clasifDens;
+            } else {
+                document.getElementById('densidad-value').textContent = '—';
+                document.getElementById('clasificacion-dens').textContent = 'Sin datos';
+            }
+            document.getElementById('profundidad-value').textContent = sample.profundidad.toLocaleString() + ' m';
             if (sample.temperaturaMin !== null) {
                 document.getElementById('temperatura-value').textContent = 
                     `${sample.temperaturaMin.toFixed(1)} - ${sample.temperaturaMax.toFixed(1)}`;
@@ -517,9 +517,9 @@
             }
             document.getElementById('fluido-value').textContent = sample.fluido;
             if (sample.densidad !== null) {
-                document.getElementById('densidad-value').textContent = sample.densidad.toFixed(2) + ' g/cm³';
+                document.getElementById('densidad-info').textContent = sample.densidad.toFixed(2) + ' g/cm³';
             } else {
-                document.getElementById('densidad-value').textContent = '—';
+                document.getElementById('densidad-info').textContent = '—';
             }
             if (sample.viscosidadMin !== null) {
                 document.getElementById('viscosidad-value').textContent = `${sample.viscosidadMin}-${sample.viscosidadMax} cP`;
